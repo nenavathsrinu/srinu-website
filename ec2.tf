@@ -1,6 +1,3 @@
-cd srinu-website  # your cloned repo directory
-
-# Create Terraform file
 echo 'provider "aws" {
   region = "ap-south-1"
 }
