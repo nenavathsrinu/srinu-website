@@ -7,6 +7,7 @@ resource "aws_instance" "web" {
   instance_type = var.instance_type
   subnet_id     = var.subnet_id
   key_name      = var.key_name
+    security_groups = [aws_security_group.web_sg.name]
   tags = {
     Name = "${var.env_name}-web"
   }
