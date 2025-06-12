@@ -1,0 +1,46 @@
+pipeline {
+  agent any
+
+  environment {
+    ANSIBLE_HOST_KEY_CHECKING = 'False'
+  }
+
+  stages {
+    stage('Checkout Code') {
+      steps {
+        git url: 'https://github.com/nenavathsrinu/srinu-website.git', branch: 'main'
+      }
+    }
+
+    stage('Terraform Init & Apply') {
+      steps {
+        dir('terraform') {
+          withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-credentials'  // Replace with your Jenkins AWS credential ID
+          ]]) {
+            sh 'terraform init'
+            sh 'terraform apply -auto-approve'
+          }
+        }
+      }
+    }
+
+    stage('Run Ansible Playbook') {
+      steps {
+        dir('ansible') {
+          sh 'ansible-playbook -i inventory.ini playbook.yml'
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo '✅ Infrastructure provisioned and configuration applied successfully.'
+    }
+    failure {
+      echo '❌ Build failed. Please check logs.'
+    }
+  }
+}

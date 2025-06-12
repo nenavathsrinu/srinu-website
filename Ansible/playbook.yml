@@ -1,8 +1,23 @@
----
-- name: Test EC2 Connection and Print Hostname
+- name: Setup Web Server and Deploy Website
   hosts: web
-  gather_facts: no
+  become: yes
 
   tasks:
-    - name: Print the hostname
-      command: hostname
+    - name: Install Apache
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start and enable Apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Copy website files
+      copy:
+        src: ../website/           # <-- Adjust path if needed
+        dest: /var/www/html/
+        owner: apache
+        group: apache
+        mode: '0644'
