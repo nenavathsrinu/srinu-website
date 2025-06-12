@@ -1,0 +1,8 @@
+---
+- name: Test EC2 Connection and Print Hostname
+  hosts: web
+  gather_facts: no
+
+  tasks:
+    - name: Print the hostname
+      command: hostname
