@@ -15,7 +15,7 @@ pipeline {
     stage('Run Ansible Playbook') {
       steps {
         dir('ansible') {
-          sh '''
+          bat '''
             echo "🔍 Running Ansible Playbook..."
             ansible-playbook -i inventory.ini playbook.yml
           '''
